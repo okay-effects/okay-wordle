@@ -25,4 +25,5 @@ object InTheBrowser:
       |""".stripMargin)
 
   def main(args: Array[String]): Unit =
-    Page.mount(OnFaces.program(steps(InLocalStorage("wordle-results")(Secret.random()(Wordle.main[App])))), skin)
+    Page.mount(OnFaces.program(steps(Model.toy()(InLocalStorage("wordle-results")(Secret.random()(
+      Wordle.main[App]))))), skin)

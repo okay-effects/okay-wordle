@@ -8,7 +8,8 @@ import okay.wordle.Wordle.App
 class WordleSuite extends munit.FunSuite:
   def play(words: Seq[String], acts: Act*): (Played[Unit], List[Result]) =
     val results = Results.inMemory()
-    (Play(steps(results(Secret.fixed(words.head, words.tail*)(Wordle.main[App]))), acts*), results.kept)
+    (Play(steps(Model.toy(new scala.util.Random(7))(results(Secret.fixed(words.head, words.tail*)(
+      Wordle.main[App])))), acts*), results.kept)
   def guess(w: String): Act = Act.press("Guess", "Guess" -> w)
   def texts(p: Played[?]): List[String] = p.at.toList.flatMap(_.parts).collect {
     case Part.Text(s) => s

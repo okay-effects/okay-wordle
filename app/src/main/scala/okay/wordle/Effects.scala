@@ -49,3 +49,20 @@ final class InMemory(initial: List[Result]) extends Handles[Results]:
     handle(p, Handler.Tail[Results, Rest, A, A](a => pure(a), [X] => (asked: Results[X]) => asked match
       case Results.All() => kept
       case Results.Add(r) => kept = kept :+ r))
+
+/** THE MODEL, as an effect: given the moves so far, a logit for each letter at each of the five places. Which model
+ * answers is a handler's — a toy here; a language model elsewhere, the program the same */
+enum Model[X]:
+  case Letters(moves: Vector[Rules.Move]) extends Model[Vector[Vector[Float]]]
+
+object Model:
+  /** THE TOY: 130 numbers — the log of each letter's count at each place in the dictionary — plus noise of 0.5 at
+   * most; it never reads the colours, so alone it writes common letters, words or not */
+  val table: Vector[Vector[Float]] = Vector.tabulate(5, 26)((i, l) =>
+    math.log(Rules.words.count(_(i) - 'a' == l) + 1.0).toFloat)
+  def toy(random: scala.util.Random = new scala.util.Random()): Handles[Model] = Toy(random)
+
+final class Toy(random: scala.util.Random) extends Handles[Model]:
+  def apply[R[_], Rest[_], A](p: A ! R)(using Split[Model, R, Rest]): A ! Rest =
+    handle(p, Handler.Tail[Model, Rest, A, A](a => pure(a), [X] => (asked: Model[X]) => asked match
+      case Model.Letters(_) => Model.table.map(_.map(_ + 0.5f * random.nextFloat()))))

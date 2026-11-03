@@ -53,6 +53,18 @@ def run(page: String, pictures: String): Unit =
   p.waitForFunction("() => document.body.textContent.includes('Played')")
   if !"Played\\s*1(?!\\d)".r.findFirstIn(text).isDefined then fail("one round not counted: " + text.takeRight(300))
   shot("wordle-statistics.png")
+  button("Back").click()
+  button("Model plays").click()
+  val t0 = System.nanoTime()
+  var n = 0
+  while !text.contains("The model solved it") && !text.contains("The model did not") && n < 6 do
+    button("Next move").click(); n += 1
+    p.waitForFunction(s"() => document.body.textContent.includes('Guess ${n + 1} of 6') || " +
+      "document.body.textContent.includes('The model solved') || document.body.textContent.includes('The model did')")
+  val ms = (System.nanoTime() - t0) / 1000000
+  if !text.contains("Played, with the mask") then fail("no masked guess shown")
+  println(s"model plays: $n moves in $ms ms")
+  shot("wordle-model.png")
   if errors.nonEmpty then fail("page errors: " + errors.mkString("; "))
   println(s"e2e: ok (the word was $answer); pictures in $pictures")
   browser.close(); pw.close()
