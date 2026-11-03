@@ -8,5 +8,6 @@ code follows it, a change of design is a change of the spec first.
 - Builds from released libraries only (okay-ui 0.1.0 and what it brings, from their GitHub Pages mavens).
 - How the board looks is the skin's (`InTheBrowser.skin`): the program only marks shapes.
 - Before a commit: `sbt appJVM/test`; after a change to a page, `sbt appJS/web` and `scripts/e2e.scala`.
+- Published: `scripts/publish.sh` (the gh-pages branch) → https://okay-effects.github.io/okay-wordle/.
 - Scripts are scala-cli, never Python. Scala 3.3, lines at most 120 wide, English in code and docs.
 - Commits: plain messages, no attribution trailers.
