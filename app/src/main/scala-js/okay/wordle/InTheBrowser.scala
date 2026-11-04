@@ -12,6 +12,8 @@ object InTheBrowser:
   val skin: Skin =
     val calm = Skin.calm(accent = "#538d4e", deep = "#2f5130")
     calm.copy(css = calm.css + """
+      |body > footer .bar { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px; }
+      |body > footer .more { margin-left: auto; }
       |body .okay-picture-frame { max-width: 360px; margin: 0 auto; }
       |body .okay-picture-shape { rx: 4px; stroke-width: 2px; }
       |body .okay-mark-tile-empty { fill: var(--okay-surface); stroke: var(--okay-border); }
